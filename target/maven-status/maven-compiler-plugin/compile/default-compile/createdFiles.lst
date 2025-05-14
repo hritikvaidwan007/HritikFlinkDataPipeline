@@ -1,0 +1,16 @@
+com/dataflow/flink/service/SchemaValidator.class
+com/dataflow/flink/model/SchemaResponse.class
+com/dataflow/flink/config/KafkaConfig.class
+com/dataflow/flink/operator/SchemaValidationOperator.class
+com/dataflow/flink/model/ValidationResult.class
+com/dataflow/flink/service/SchemaFetchService.class
+com/dataflow/flink/SchemaValidationJob$1.class
+com/dataflow/flink/SchemaValidationJob.class
+com/dataflow/flink/utils/AvroUtil.class
+com/dataflow/flink/config/AppConfig.class
+com/dataflow/flink/SchemaValidationJob$2.class
+com/dataflow/flink/utils/AvroUtil$1.class
+com/dataflow/flink/config/ConfigLoader.class
+com/dataflow/flink/config/SchemaConfig.class
+com/dataflow/flink/model/Message.class
+com/dataflow/flink/operator/JsonToAvroTransformer.class

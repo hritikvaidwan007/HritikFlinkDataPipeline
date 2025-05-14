@@ -1,0 +1,91 @@
+{
+  "type": "record",
+  "name": "MyClass",
+  "namespace": "com.acme.avro",
+  "fields": [
+    {
+      "name": "_timestamp",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "title",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "schemaId",
+      "type": [
+        "null",
+        "int"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "schemaVersion",
+      "type": [
+        "null",
+        "int"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "eventType",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "deviceId",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "userId",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "sessionId",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "nullable": true
+    },
+    {
+      "name": "metadata",
+      "type": [
+        "null",
+        {
+          "type": "map",
+          "values": "string"
+        }
+      ],
+      "default": null,
+      "nullable": true
+    }
+  ]
+}

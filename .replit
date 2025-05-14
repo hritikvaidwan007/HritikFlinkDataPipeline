@@ -1,0 +1,40 @@
+modules = ["java", "java-17"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["maven"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Flink Application"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "build_flink_application"
+
+[[workflows.workflow]]
+name = "Flink Application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run_local.sh"
+
+[[workflows.workflow]]
+name = "build_flink_application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd $REPL_HOME && mvn clean compile"
+
+[deployment]
+run = ["sh", "-c", "./run_local.sh"]
