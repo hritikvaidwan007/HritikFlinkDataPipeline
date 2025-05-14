@@ -36,7 +36,7 @@ public class SimpleLocalRunner {
                 (schemaConfig.isUseLocalSchema() ? schemaConfig.getLocalSchemaPath() : schemaConfig.getSchemaApiUrl()));
             
             // Fetch schema
-            SchemaFetchService schemaService = new SchemaFetchService(schemaConfig);
+            SchemaFetchService schemaService = new SchemaFetchService(schemaConfig, appConfig.getEnvironment());
             Schema avroSchema = schemaService.fetchSchema();
             System.out.println("Schema loaded successfully: " + avroSchema.getName());
             

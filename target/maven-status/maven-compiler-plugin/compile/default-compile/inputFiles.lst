@@ -4,6 +4,8 @@
 /home/runner/workspace/src/main/java/com/dataflow/flink/config/SchemaConfig.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/model/Message.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/utils/AvroUtil.java
+/home/runner/workspace/src/main/java/com/dataflow/flink/LocalFileSinkExample.java
+/home/runner/workspace/src/main/java/com/dataflow/flink/SimpleDemoWriter.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/config/KafkaConfig.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/TestLocalSink.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/service/SchemaValidator.java

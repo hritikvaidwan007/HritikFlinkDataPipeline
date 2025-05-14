@@ -35,7 +35,25 @@ fi
 # The --config argument specifies the configuration file to use
 echo "Running application from JAR file..."
 echo "Using configuration: config/local.properties"
-java -jar target/flink-schema-validator-1.0.0.jar --config config/local.properties
+
+# Option 1: Run the main application
+# java -jar target/flink-schema-validator-1.0.0.jar --config config/local.properties
+
+# Option 2: Run the simplified demo writer (faster for testing file sink)
+echo "Running SimpleDemoWriter to demonstrate file sink functionality..."
+java -cp target/classes com.dataflow.flink.SimpleDemoWriter
+
+echo ""
+echo "Checking output files:"
+ls -la output/
+
+echo ""
+echo "Sample content from output files:"
+echo "Valid records (validation_results.json):"
+cat output/validation_results.json
+echo ""
+echo "Invalid records (validation_results.json.invalid):"
+cat output/validation_results.json.invalid
 
 # Notes:
 # - For production deployment, use the deployment guide instead of this script

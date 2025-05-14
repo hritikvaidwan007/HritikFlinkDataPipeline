@@ -26,7 +26,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd $REPL_HOME && mvn compile exec:java -Dexec.mainClass=\"com.dataflow.flink.TestLocalSink\""
+args = "cd $REPL_HOME && mvn compile exec:java -Dexec.mainClass=\"com.dataflow.flink.FileSinkOnly\""
 
 [[workflows.workflow]]
 name = "build_flink_application"
@@ -37,4 +37,4 @@ task = "shell.exec"
 args = "cd $REPL_HOME && mvn clean compile"
 
 [deployment]
-run = ["sh", "-c", "cd $REPL_HOME && mvn compile exec:java -Dexec.mainClass=\"com.dataflow.flink.TestLocalSink\""]
+run = ["sh", "-c", "cd $REPL_HOME && mvn compile exec:java -Dexec.mainClass=\"com.dataflow.flink.FileSinkOnly\""]

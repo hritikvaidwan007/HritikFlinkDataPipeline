@@ -56,6 +56,9 @@ public class SchemaFetchService {
     /** Configuration for schema fetching behavior and locations */
     private final SchemaConfig schemaConfig;
     
+    /** Application environment (dev, prod, local) */
+    private final String environment;
+    
     /** HTTP client for API requests to the Schema Registry */
     private final OkHttpClient httpClient;
     
@@ -67,9 +70,11 @@ public class SchemaFetchService {
      * timeouts to prevent application startup delays or pipeline stalls.
      *
      * @param schemaConfig Configuration containing schema fetch parameters
+     * @param environment Application environment (dev, prod, local)
      */
-    public SchemaFetchService(SchemaConfig schemaConfig) {
+    public SchemaFetchService(SchemaConfig schemaConfig, String environment) {
         this.schemaConfig = schemaConfig;
+        this.environment = environment;
         
         // Configure HTTP client with reasonable timeouts
         // In production environments, these values may need adjustment based on network conditions
@@ -189,6 +194,13 @@ public class SchemaFetchService {
             if (!response.isSuccessful()) {
                 String errorMsg = "Failed to fetch schema: " + response.code() + " - " + response.message();
                 LOG.error(errorMsg);
+                
+                // If we're in development/local environment, we can fall back to local schema
+                if ("local".equals(environment)) {
+                    LOG.warn("Using local schema file as fallback");
+                    return loadSchemaFromFile();
+                }
+                
                 throw new IOException(errorMsg);
             }
             

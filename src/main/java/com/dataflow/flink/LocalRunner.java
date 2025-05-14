@@ -50,7 +50,7 @@ public class LocalRunner {
             
             // Fetch schema
             Schema avroSchema;
-            SchemaFetchService schemaService = new SchemaFetchService(schemaConfig);
+            SchemaFetchService schemaService = new SchemaFetchService(schemaConfig, appConfig.getEnvironment());
             avroSchema = schemaService.fetchSchema();
             
             // Create schema validator

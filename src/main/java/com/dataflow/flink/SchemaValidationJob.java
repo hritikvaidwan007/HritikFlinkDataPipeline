@@ -123,7 +123,7 @@ public class SchemaValidationJob {
         
         // Fetch schema from API or local file
         Schema avroSchema;
-        SchemaFetchService schemaService = new SchemaFetchService(schemaConfig);
+        SchemaFetchService schemaService = new SchemaFetchService(schemaConfig, appConfig.getEnvironment());
         avroSchema = schemaService.fetchSchema();
         
         // Create schema validator
