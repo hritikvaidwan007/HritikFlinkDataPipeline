@@ -1,11 +1,14 @@
 /home/runner/workspace/src/main/java/com/dataflow/flink/service/SchemaFetchService.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/operator/SchemaValidationOperator.java
+/home/runner/workspace/src/main/java/com/dataflow/flink/LocalRunner.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/config/SchemaConfig.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/model/Message.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/utils/AvroUtil.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/config/KafkaConfig.java
+/home/runner/workspace/src/main/java/com/dataflow/flink/TestLocalSink.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/service/SchemaValidator.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/SchemaValidationJob.java
+/home/runner/workspace/src/main/java/com/dataflow/flink/SimpleLocalRunner.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/config/AppConfig.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/model/ValidationResult.java
 /home/runner/workspace/src/main/java/com/dataflow/flink/operator/JsonToAvroTransformer.java

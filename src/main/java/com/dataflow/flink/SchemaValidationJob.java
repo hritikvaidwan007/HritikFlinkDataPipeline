@@ -100,10 +100,26 @@ public class SchemaValidationJob {
         KafkaConfig kafkaConfig = appConfig.getKafkaConfig();
         SchemaConfig schemaConfig = appConfig.getSchemaConfig();
         
+        // For local mode with file source and sink, use simplified execution
+        // This bypasses Flink runtime issues with Java module restrictions
+        if (appConfig.isUseFileSource() && appConfig.isUseFileSink() && "local".equals(appConfig.getEnvironment())) {
+            LOG.info("Executing in simplified local mode (bypassing Flink runtime)");
+            boolean success = LocalRunner.execute(appConfig, schemaConfig);
+            if (success) {
+                LOG.info("Local execution completed successfully");
+                return;  // Exit early, skip Flink execution
+            } else {
+                LOG.error("Local execution failed, falling back to Flink execution");
+            }
+        }
+        
         // Set up execution environment
         // The StreamExecutionEnvironment is the context in which a Flink streaming program runs
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.getConfig().setGlobalJobParameters(params);
+        
+        // Disable closure cleaner to avoid reflection issues with Java modules in newer JDK versions
+        env.getConfig().setClosureCleanerLevel(org.apache.flink.api.common.ExecutionConfig.ClosureCleanerLevel.NONE);
         
         // Fetch schema from API or local file
         Schema avroSchema;
@@ -158,9 +174,11 @@ public class SchemaValidationJob {
         // Side outputs allow producing multiple output streams from a single operator
         DataStream<String> invalidMessages = validationResults.getSideOutput(INVALID_TAG);
 
-        // Create Kafka sinks
+        // Create sinks for processed data
         // Sinks define where Flink writes its results to
-        if (!appConfig.isUseFileSource()) {
+        if (!appConfig.isUseFileSource() && !appConfig.isUseFileSink()) {
+            // Use Kafka sinks when not in file mode
+            
             // Sink for valid messages
             KafkaSink<String> validSink = createKafkaSink(kafkaConfig, kafkaConfig.getSinkTopic());
             
@@ -180,6 +198,64 @@ public class SchemaValidationJob {
                 LOG.info("DLQ is enabled, invalid messages will be sent to: {}", dlqTopic);
             } else {
                 LOG.info("DLQ is disabled, invalid messages will be discarded");
+            }
+        } else if (appConfig.isUseFileSink()) {
+            // Use file sink when file sink mode is enabled
+            LOG.info("Using file sink: writing results to {}", appConfig.getOutputFilePath());
+            
+            // Ensure output directory exists
+            java.io.File directory = new java.io.File(appConfig.getOutputFilePath()).getParentFile();
+            if (directory != null && !directory.exists()) {
+                directory.mkdirs();
+            }
+            
+            // Create a file sink for valid messages
+            // In Flink, FileSink provides fault-tolerant file operations
+            try {
+                // For simplicity in this example, we'll use Files.write() to write to file
+                // This is not production-ready but works for local testing
+                DataStream<String> validOutput = validationResults
+                    .filter(result -> result.isValid())
+                    .map(result -> objectMapper.writeValueAsString(result.getData()));
+                
+                validOutput.addSink(new org.apache.flink.streaming.api.functions.sink.SinkFunction<String>() {
+                    private static final long serialVersionUID = 1L;
+                    
+                    @Override
+                    public void invoke(String value, Context context) throws Exception {
+                        // Append to file using java.nio.file.Files
+                        java.nio.file.Path path = java.nio.file.Paths.get(appConfig.getOutputFilePath());
+                        java.nio.file.Files.write(
+                            path, 
+                            (value + System.lineSeparator()).getBytes(),
+                            java.nio.file.StandardOpenOption.CREATE, 
+                            java.nio.file.StandardOpenOption.APPEND
+                        );
+                    }
+                });
+                
+                // Create a file sink for invalid messages
+                String invalidFilePath = appConfig.getOutputFilePath() + ".invalid";
+                LOG.info("Writing invalid messages to {}", invalidFilePath);
+                
+                invalidMessages.addSink(new org.apache.flink.streaming.api.functions.sink.SinkFunction<String>() {
+                    private static final long serialVersionUID = 1L;
+                    
+                    @Override
+                    public void invoke(String value, Context context) throws Exception {
+                        // Append to file using java.nio.file.Files
+                        java.nio.file.Path path = java.nio.file.Paths.get(invalidFilePath);
+                        java.nio.file.Files.write(
+                            path, 
+                            (value + System.lineSeparator()).getBytes(),
+                            java.nio.file.StandardOpenOption.CREATE, 
+                            java.nio.file.StandardOpenOption.APPEND
+                        );
+                    }
+                });
+            } catch (Exception e) {
+                LOG.error("Error setting up file sink: {}", e.getMessage(), e);
+                throw e;
             }
         } else {
             // Print results to stdout for local testing

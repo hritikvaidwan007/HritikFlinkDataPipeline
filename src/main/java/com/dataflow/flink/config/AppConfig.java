@@ -9,6 +9,8 @@ public class AppConfig {
     private String environment;
     private boolean useFileSource;
     private String inputFilePath;
+    private boolean useFileSink;
+    private String outputFilePath;
     
     public AppConfig() {
         // Default constructor
@@ -52,5 +54,21 @@ public class AppConfig {
     
     public void setInputFilePath(String inputFilePath) {
         this.inputFilePath = inputFilePath;
+    }
+    
+    public boolean isUseFileSink() {
+        return useFileSink;
+    }
+    
+    public void setUseFileSink(boolean useFileSink) {
+        this.useFileSink = useFileSink;
+    }
+    
+    public String getOutputFilePath() {
+        return outputFilePath;
+    }
+    
+    public void setOutputFilePath(String outputFilePath) {
+        this.outputFilePath = outputFilePath;
     }
 }

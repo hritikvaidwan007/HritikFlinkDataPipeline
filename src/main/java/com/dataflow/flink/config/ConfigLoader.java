@@ -99,6 +99,11 @@ public class ConfigLoader {
         appConfig.setUseFileSource(Boolean.parseBoolean(props.getProperty("app.use.file.source", "false")));
         appConfig.setInputFilePath(props.getProperty("app.input.file.path", "src/main/resources/sample_data.json"));
         
+        // Set file sink options for local testing mode
+        // When true, writes data to a file instead of Kafka
+        appConfig.setUseFileSink(Boolean.parseBoolean(props.getProperty("app.use.file.sink", "false")));
+        appConfig.setOutputFilePath(props.getProperty("app.output.file.path", "output/results.json"));
+        
         // Set up Kafka configuration
         // These settings control the Kafka connection and behavior
         KafkaConfig kafkaConfig = new KafkaConfig();
