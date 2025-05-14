@@ -26,7 +26,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "./run_local.sh"
+args = "cd $REPL_HOME && mvn exec:java -Dexec.mainClass=\"com.dataflow.flink.SchemaValidationJob\" -Dexec.args=\"--config config/local.properties\""
 
 [[workflows.workflow]]
 name = "build_flink_application"
@@ -34,7 +34,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd $REPL_HOME && mvn clean compile"
+args = "cd $REPL_HOME && mvn package -DskipTests"
 
 [deployment]
-run = ["sh", "-c", "./run_local.sh"]
+run = ["sh", "-c", "cd $REPL_HOME && mvn exec:java -Dexec.mainClass=\"com.dataflow.flink.SchemaValidationJob\" -Dexec.args=\"--config config/local.properties\""]

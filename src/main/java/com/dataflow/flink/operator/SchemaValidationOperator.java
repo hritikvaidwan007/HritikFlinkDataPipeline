@@ -46,7 +46,7 @@ public class SchemaValidationOperator extends ProcessFunction<JsonNode, Validati
     private static final ObjectMapper objectMapper = new ObjectMapper();
     
     /** Schema validator service that performs the actual validation logic */
-    private final SchemaValidator validator;
+    private final transient SchemaValidator validator;
     
     /** OutputTag for routing invalid messages to a side output stream */
     private final OutputTag<String> invalidTag;

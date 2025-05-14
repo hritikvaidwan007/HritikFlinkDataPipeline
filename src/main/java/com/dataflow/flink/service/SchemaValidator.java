@@ -45,12 +45,15 @@ import java.util.Map;
  */
 /**
  * Schema validator service that checks JSON messages against an Avro schema.
+ * 
+ * Note: This class contains non-serializable Avro Schema objects
+ * and thus must be marked as transient in any Flink operators.
  */
 public class SchemaValidator {
     private static final Logger LOG = LoggerFactory.getLogger(SchemaValidator.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
     
-    /** The Avro schema used for validation */
+    /** The Avro schema used for validation - not serializable */
     private final Schema schema;
     
     /**
