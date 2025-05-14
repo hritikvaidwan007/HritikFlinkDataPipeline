@@ -1,0 +1,52 @@
+write production ready Apache flink code
+
+to work with EMR  and EMR on EKS (correct me if i'm wrong)
+
+Everything should be config based, plug and play so that even a non java coder can use it
+
+1) SOURCE: That consumes data from kafka topic using brokers, topic, username, password, cert file, etc.
+
+
+
+2) PROCESSING:
+    It will Hit An API (once) to fetch avro schema and then validate each incoming data packet coming from kafka against that schema.
+    Working API example: 'https://frame-be.sandbox.analytics.yo-digital.com/api/v1/schemaregistry/schemas/TV_EVENTS_RAW.CENTRAL/aggregated?isTabular=false'
+    sample response to this API is attached with name 'sample_api_response.json'
+
+    API returns Response which contains multiple schema 'version' under same schema name, by default latest schema version is taken, unless manually provided by the config
+
+    It should ignore the fields which are not in the avros schema but coming from the kafka
+
+
+
+    Imports that might be useful (because i have tested it):         
+    import com.fasterxml.jackson.core.type.TypeReference;
+    import com.fasterxml.jackson.databind.JsonNode;
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import okhttp3.OkHttpClient;
+    import okhttp3.Request;
+    import okhttp3.Response;
+    import org.apache.avro.Schema;
+    import org.apache.avro.generic.GenericData;
+    import org.apache.avro.generic.GenericRecord;
+
+    it will send valid json data packets to Sinks and rejected packets will be sent to '<SOURCE_KAFKA_TOPIC>_dlq' kafka topic.
+    rejected packets can also be discared isntead of sending it to DLQ kafka topic (based on config)
+
+3) SINKS: 
+   sink is another kafka topic (streaming) (Kafka cluster is also in Same AWS)
+
+- There shoukd be a dev config and there is a prod  config
+Add local config if possible, it should also connect to kafka hosted in localhost (local computer) (for both source and sink) , it also takes schema from a local file instead of api if one parameter is configured
+
+- it should have proper exception handling
+
+- it should have feature of loading events from a json file instead of source kafka . (This feature will be used for debugging) (or suggest me anything better for testing in my local machine)
+
+- it should not be very complex, normal coder should understand the code. Because it will not be touched again by some other coder in the future.
+
+-- make proper diagrams, documentations, deployment strategies, architecture, readme, etc
+
+-- search from google which flink version is most stable and works with EMR properly. try newest stable version possible
+
+Give me step by step guid on how to build jar file and run on AWS EMR or EMR on EKS
